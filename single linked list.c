@@ -298,44 +298,37 @@ NODE sort(NODE pf)
 }
 
 
-NODE cop(NODE pf)
-{	
-	if(pf==NULL) return NULL;	
-
-	NODE NN,cpy,ccpy;
-	 NN=createnode();
-	 ccpy=cpy=NN;
-	 cpy->info=pf->info;
-	 cpy->link=pf->link;
-	 pf=pf->link;
-	 while (pf!=NULL)
-	{NN=createnode();
-	 cpy=NN;
-	 cpy->info=pf->info;
-	 cpy->link=pf->link;
-	 pf=pf->link;
-	 }
-	 cpy->link=NULL;
-	 return ccpy;
-}
-
+NODE cpyu(NODE pf)
+{       NODE NN,cpy,ccpy;
+        NN=createnode();
+        ccpy=cpy=NN;
+        cpy->info=pf->info;
+        pf=pf->link;
+ while (pf!=NULL)
+ {
+   NN=createnode();
+   cpy->link=NN;
+   cpy=cpy->link;
+   cpy->info=pf->info;
+   pf=pf->link;
+ }
+      cpy->link=NULL;
+      return ccpy;
+ }
 
 NODE reverse(NODE pf)
-{
-	if(pf==NULL) return NULL;	
-	NODE NN,rev;
-	 NN=createnode();
-	 rev=NN;
-	 rev->info=pf->info;
-	 rev->link=NULL;
-	 pf=pf->link;
-	 while (pf!=NULL)
-	 {  NN=createnode();
-	    NN->link=rev;
- 	    rev=NN;
- 	    rev->info=pf->info;
- 	    pf=pf->link;
- 	 }
-
-       return rev;
+{NODE NN,rev;
+ NN=createnode();
+ rev=NN;
+ rev->info=pf->info;
+ rev->link=NULL;
+ pf=pf->link;
+ while (pf!=NULL)
+{NN=createnode();
+ NN->link=rev;
+ rev=NN;
+ rev->info=pf->info;
+ pf=pf->link;
+ }
+return rev;
  }
