@@ -7,7 +7,7 @@ struct node * link;
 };
 typedef struct node* NODE;
 
-int N=0;
+
 NODE createnode();
 void Display(NODE);
 void insertrear(NODE);
@@ -31,7 +31,7 @@ void main()
   system ("clear");
 for(;;)
 {
-  printf("Enter choice\n 1.insertfront\n 2.Display\n 3.insertrear\n 4.deletefront\n 5.deleterear\n 6.search\n 7.insertbypos\n 8.insertbyorder\n 9.deletebykey\n 10.deletebypos\n 11.sort\n 12.copy\n 13.reverse\n");
+  printf("Enter choice\n 1.insertfront\n 2.Display\n 3.insertrear\n 4.deletefront\n 5.deleterear\n 6.search\n 7.insertbypos\n 8.insertbyorder\n 9.deletebykey\n 10.deletebypos\n 11.reverse\n 12.copy\n");
   scanf("%d",&choice);
   switch(choice)
   {
@@ -142,9 +142,9 @@ void insertbypos(NODE PH)
         printf("Enter the data\n");
  	scanf("%d",&NN->info);
   	NN->link=NULL;
-	L1:printf("Enter position between 1 to %d",N+1);
+	L1:printf("Enter position between 1 to %d",(PH->info+1));
    	scanf("%d",&pos);
- 	 if(pos<1 || pos>N+1)  goto L1;
+ 	 if(pos<1 || pos>PH->info+1)  goto L1;
 	PN=PH;
 	TP=PH->link;
 	while(cnt!=pos)
@@ -153,7 +153,6 @@ void insertbypos(NODE PH)
 	TP=TP->link;
 	cnt++;
 	}
-	NN=createnode();
 	NN->link=TP;
 	PN->link=NN;
 	PH->info++;
@@ -161,15 +160,16 @@ void insertbypos(NODE PH)
 void deletebypos(NODE PH)
 {
 	NODE ND,PN;
-	int pos,cnt;
+	int pos,cnt=1;
 	if(PH->info==0)
 	{
 	printf("Empty");
 	return ;
 	}
-	L1:printf("Enter position between 1 to %d",N);
+	L1:printf("Enter position between 1 to %d",(PH->info));
 	scanf("%d",&pos);
-	if(pos<1||pos>N) goto L1;
+	ND=PH;
+	if(pos<1||pos>(PH->info)) goto L1;
 	while(cnt!=pos)
 	{
 	ND=ND->link;
