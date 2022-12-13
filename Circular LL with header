@@ -1,0 +1,278 @@
+#include<stdio.h>
+#include<stdlib.h>
+struct node
+{
+int info;
+struct node * link;
+};
+typedef struct node* NODE;
+
+int N=0;
+NODE createnode();
+void Display(NODE);
+void insertrear(NODE);
+void insertfront(NODE);
+void deletefront(NODE);
+void deleterear(NODE);
+void insertbypos(NODE);
+void deletebypos(NODE);
+void deletebykey(NODE);
+void insertbyorder(NODE);
+NODE searchbykey(NODE);
+void reverse(NODE);
+NODE Copy(NODE);
+void main()
+{ 
+  NODE Head=createnode();
+  Head->info=0;
+  Head->link=Head;  
+  NODE SN,copy;
+  int choice;
+  system ("clear");
+for(;;)
+{
+  printf("Enter choice\n 1.insertfront\n 2.Display\n 3.insertrear\n 4.deletefront\n 5.deleterear\n 6.search\n 7.insertbypos\n 8.insertbyorder\n 9.deletebykey\n 10.deletebypos\n 11.sort\n 12.copy\n 13.reverse\n");
+  scanf("%d",&choice);
+  switch(choice)
+  {
+    case 1:insertfront(Head);Display(Head);break;
+    case 2:Display(Head);break;
+    case 3:insertrear(Head);Display(Head);break;
+    case 4:deletefront(Head);Display(Head);break;
+    case 5:deleterear(Head);Display(Head);break;
+    case 6:SN =searchbykey(Head);
+            if(SN==NULL)
+            printf("Not present\n");
+            else
+            printf("Node info is  %d\n",SN->info);
+            break;
+    case 7:insertbypos(Head);Display(Head);break;
+    case 8:insertbyorder(Head);Display(Head);break;
+    case 9:deletebykey(Head);Display(Head);break;
+    case 10:deletebypos(Head);Display(Head);break;
+    case 11:reverse(Head);Display(Head);break;
+    case 12: copy=Copy(Head);Display(copy);break;
+    
+    default:exit(0);
+  }
+}
+}
+NODE createnode()
+{
+  NODE NN =(NODE)malloc(sizeof(struct node));
+  return NN;
+}
+
+void Display(NODE PH)
+{
+	if(PH->info==0)
+	{
+		printf("Empty\n");
+		return;	
+	}
+	NODE TP=PH->link;
+	while(TP!=PH)
+	{
+	printf("%d\n",TP->info);
+	TP=TP->link;
+	}
+}
+
+void insertrear(NODE PH)
+{
+NODE TP=PH->link;
+NODE NN=createnode();
+printf("Enter the data\n");
+scanf("%d",&NN->info);
+while(TP->link!=PH)
+{
+TP=TP->link;
+}
+TP->link=NN;
+TP=TP->link;
+TP->link=PH;
+PH->info++;
+}
+
+void insertfront(NODE PH)
+{	NODE NN;
+	NN=createnode();
+	printf("Enter the data\n");
+	scanf("%d",&NN->info);
+	NN->link=PH->link;
+	PH->link=NN;
+	PH->info++;
+}
+void deleterear(NODE PH)
+{
+        NODE PN,TP;
+	if(PH->info==0)
+	{
+	printf("Empty");
+	return;
+	}
+	PN=PH;
+	TP=PH->link;
+	while(TP->link!=PH)
+	{ PN=TP;
+	  TP=TP->link;
+	}
+	PN->link=PH;
+	free (TP);
+        PH->info--;
+}
+void deletefront(NODE PH)
+{
+	NODE TP;
+	if(PH->info==0)
+	{
+		printf("Empty\n");
+		return;
+	}
+	TP=PH->link;
+	PH->link=TP->link;
+	free(TP);
+	PH->info--;
+}
+void insertbypos(NODE PH)
+{
+	NODE NN,TP,PN;
+ 	int pos,cnt=1;
+ 	NN=createnode();
+        printf("Enter the data\n");
+ 	scanf("%d",&NN->info);
+  	NN->link=NULL;
+	L1:printf("Enter position between 1 to %d",N+1);
+   	scanf("%d",&pos);
+ 	 if(pos<1 || pos>N+1)  goto L1;
+	PN=PH;
+	TP=PH->link;
+	while(cnt!=pos)
+	{
+	PN=TP;
+	TP=TP->link;
+	cnt++;
+	}
+	NN=createnode();
+	NN->link=TP;
+	PN->link=NN;
+	PH->info++;
+}
+void deletebypos(NODE PH)
+{
+	NODE ND,PN;
+	int pos,cnt;
+	if(PH->info==0)
+	{
+	printf("Empty");
+	return ;
+	}
+	L1:printf("Enter position between 1 to %d",N);
+	scanf("%d",&pos);
+	if(pos<1||pos>N) goto L1;
+	while(cnt!=pos)
+	{
+	ND=ND->link;
+	cnt++;
+	}
+	NODE K=ND->link;
+	ND->link=K->link;
+	free(K);
+        PH->info--;
+}	
+
+void deletebykey(NODE PH)
+{
+ 	if(PH->info==0)
+	{
+	printf("Empty");
+	return ;
+	}
+ 	NODE TP,ND;
+ 	TP=PH;
+ 	int key;
+ 	printf("Enter the key");
+ 	scanf("%d",&key);
+ 	do{
+ 	ND=TP;
+ 	TP=TP->link;
+	if(TP->info==key)
+	break;
+	}while(TP!=PH);
+	if(TP==PH)
+	{
+	printf("Not Found");
+	return;
+	}
+	else{
+	ND->link=TP->link;
+	PH->info--;
+	free(TP);
+        }
+}
+ 
+void insertbyorder(NODE PH)
+{
+	NODE TP=PH->link;
+	NODE PN=PH;
+	NODE NN=createnode();
+	printf("Enter the number\n");
+	scanf("%d",&NN->info);
+	while(TP!=PH&&NN->info>TP->info)
+	{
+	PN=TP;
+	TP=TP->link;
+	}
+	NN->link=TP;
+	PN->link=NN;
+	PH->info++;
+}
+NODE searchbykey(NODE PH)
+{	if(PH->info==0)
+	  {return NULL;}
+	int key;
+	printf("Enter key");
+	scanf("%d",&key);
+	NODE TP=PH->link;
+	while(TP!=PH)
+	{
+		if(TP->info==key)
+		{
+		  return(TP);
+		}
+	TP=TP->link;
+	}
+	return NULL;
+}
+
+void reverse(NODE PH)
+{
+	NODE TP,PN,SN;
+	TP=PH->link;
+	SN=PH;
+	while(TP!=PH)
+	{
+	PN=TP;
+	TP=TP->link;
+	PN->link=SN;
+	SN=PN;
+	}
+	PH->link=PN;
+} 
+NODE Copy(NODE PH)
+{
+	NODE NN,TP,Cpy;
+ 	NN=createnode();
+	NN->info=PH->info;
+	Cpy=NN;
+	TP=PH->link;
+	while(TP!=PH)
+	{
+	NN->link=createnode();
+	NN=NN->link;
+	NN->info=TP->info;
+	TP=TP->link;
+	}
+	NN->link=Cpy;
+	return Cpy;
+}
