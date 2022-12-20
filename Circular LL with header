@@ -3,7 +3,8 @@
 struct node
 {
 int info;
-struct node * link;
+struct node * RL;
+struct node * LL;
 };
 typedef struct node* NODE;
 
@@ -25,7 +26,8 @@ void main()
 { 
   NODE Head=createnode();
   Head->info=0;
-  Head->link=Head;  
+  Head->RL=Head; 
+  Head->LL=Head; 
   NODE SN,copy;
   int choice;
   system ("clear");
@@ -62,7 +64,6 @@ NODE createnode()
   NODE NN =(NODE)malloc(sizeof(struct node));
   return NN;
 }
-
 void Display(NODE PH)
 {
 	if(PH->info==0)
@@ -70,28 +71,23 @@ void Display(NODE PH)
 		printf("Empty\n");
 		return;	
 	}
-	NODE TP=PH->link;
+	NODE TP=PH->RL;
 	while(TP!=PH)
 	{
 	printf("%d\n",TP->info);
-	TP=TP->link;
+	TP=TP->RL;
 	}
 }
-
 void insertrear(NODE PH)
 {
-NODE TP=PH->link;
-NODE NN=createnode();
-printf("Enter the data\n");
-scanf("%d",&NN->info);
-while(TP->link!=PH)
-{
-TP=TP->link;
-}
-TP->link=NN;
-TP=TP->link;
-TP->link=PH;
-PH->info++;
+	NODE NN=createnode();
+	printf("Enter the data\n");
+	scanf("%d",&NN->info);
+	NN->LL=PH->LL;
+	NN->RL=PH;
+	NN->LL->RL=NN;
+	NN->RL->LL=NN;
+	PH->info++;
 }
 
 void insertfront(NODE PH)
@@ -99,132 +95,78 @@ void insertfront(NODE PH)
 	NN=createnode();
 	printf("Enter the data\n");
 	scanf("%d",&NN->info);
-	NN->link=PH->link;
-	PH->link=NN;
+	NN->LL=PH;
+	NN->RL=PH->RL;
+	PH->RL=NN;
+	NN->RL->LL=NN;
 	PH->info++;
 }
 void deleterear(NODE PH)
 {
-        NODE PN,TP;
 	if(PH->info==0)
 	{
 	printf("Empty");
 	return;
-	}
-	PN=PH;
-	TP=PH->link;
-	while(TP->link!=PH)
-	{ PN=TP;
-	  TP=TP->link;
-	}
-	PN->link=PH;
-	free (TP);
-        PH->info--;
+	}        
+	NODE LN=PH->LL;
+	PH->LL=LN->LL;
+	LN->LL->RL=PH;
+	printf("Deleted info is %d \n",LN->info);
+	free(LN);
+	PH->info--;
 }
 void deletefront(NODE PH)
 {
-	NODE TP;
+	NODE FN;
 	if(PH->info==0)
 	{
 		printf("Empty\n");
 		return;
 	}
-	TP=PH->link;
-	PH->link=TP->link;
-	free(TP);
+	FN=PH->RL;
+	PH->RL=FN->RL;
+	FN->RL->LL=PH;
+	printf("Deleted info is %d\n",FN->info);
+	free (FN);
 	PH->info--;
 }
 void insertbypos(NODE PH)
 {
-	NODE NN,TP,PN;
+	NODE NN,TP;
  	int pos,cnt=1;
  	NN=createnode();
         printf("Enter the data\n");
  	scanf("%d",&NN->info);
-  	NN->link=NULL;
 	L1:printf("Enter position between 1 to %d",(PH->info+1));
    	scanf("%d",&pos);
  	 if(pos<1 || pos>PH->info+1)  goto L1;
-	PN=PH;
-	TP=PH->link;
+	TP=PH->RL;
+	
 	while(cnt!=pos)
 	{
-	PN=TP;
-	TP=TP->link;
+	TP=TP->RL;
 	cnt++;
 	}
-	NN->link=TP;
-	PN->link=NN;
+	NN->LL=TP->LL;
+	NN->RL=TP;
+	NN->LL->RL=NN;
+	TP->LL=NN;
 	PH->info++;
 }
-void deletebypos(NODE PH)
-{
-	NODE ND,PN;
-	int pos,cnt=1;
-	if(PH->info==0)
-	{
-	printf("Empty");
-	return ;
-	}
-	L1:printf("Enter position between 1 to %d",(PH->info));
-	scanf("%d",&pos);
-	ND=PH;
-	if(pos<1||pos>(PH->info)) goto L1;
-	while(cnt!=pos)
-	{
-	ND=ND->link;
-	cnt++;
-	}
-	NODE K=ND->link;
-	ND->link=K->link;
-	free(K);
-        PH->info--;
-}	
-
-void deletebykey(NODE PH)
-{
- 	if(PH->info==0)
-	{
-	printf("Empty");
-	return ;
-	}
- 	NODE TP,ND;
- 	TP=PH;
- 	int key;
- 	printf("Enter the key");
- 	scanf("%d",&key);
- 	do{
- 	ND=TP;
- 	TP=TP->link;
-	if(TP->info==key)
-	break;
-	}while(TP!=PH);
-	if(TP==PH)
-	{
-	printf("Not Found");
-	return;
-	}
-	else{
-	ND->link=TP->link;
-	PH->info--;
-	free(TP);
-        }
-}
- 
 void insertbyorder(NODE PH)
 {
-	NODE TP=PH->link;
-	NODE PN=PH;
+	NODE TP=PH->RL;
 	NODE NN=createnode();
 	printf("Enter the number\n");
 	scanf("%d",&NN->info);
 	while(TP!=PH&&NN->info>TP->info)
 	{
-	PN=TP;
-	TP=TP->link;
+	TP=TP->RL;
 	}
-	NN->link=TP;
-	PN->link=NN;
+	NN->LL=TP->LL;
+	NN->RL=TP;
+	NN->LL->RL=NN;
+	TP->LL=NN;
 	PH->info++;
 }
 NODE searchbykey(NODE PH)
@@ -233,46 +175,107 @@ NODE searchbykey(NODE PH)
 	int key;
 	printf("Enter key");
 	scanf("%d",&key);
-	NODE TP=PH->link;
+	NODE TP=PH->RL;
 	while(TP!=PH)
 	{
 		if(TP->info==key)
 		{
 		  return(TP);
 		}
-	TP=TP->link;
+	TP=TP->RL;
 	}
 	return NULL;
 }
-
+void deletebykey(NODE PH)
+{
+	NODE TP;
+ 	int key;
+	if(PH->info==0)
+	{
+	printf("Empty");
+	return;
+	} 
+	printf("Enter the key");
+	scanf("%d",&key);
+	TP=PH->RL;
+	while(TP!=PH&&TP->info!=key)
+	{
+	TP=TP->RL;}
+	if(TP==PH)
+	{
+	printf("Not found");
+	return;
+	}
+	TP->LL->RL=TP->RL;
+	TP->RL->LL=TP->LL;
+	printf("Deleted info is %d\n",PH->info);
+	free(TP);
+	PH->info--;
+}
+void deletebypos(NODE PH)
+{
+	NODE NN,TP;
+	int pos,cnt;
+	if(PH->info == 0)
+	{
+	printf("Empty List \n");
+	return;
+	}
+	l1:printf("Enter The Position between 1 to %d\n",PH->info);
+	scanf("%d",&pos);
+	if(pos<1 || pos > PH->info) goto l1;
+	cnt = 1;
+	
+	TP = PH->RL;
+	while(cnt!=pos)
+	{
+	TP = TP->RL;
+	cnt++;
+	}
+	TP->LL->RL = TP->RL;
+	TP->RL->LL = TP->LL;
+	printf("%d is Deleted\n",TP->info);
+	free(TP);
+	PH->info--;
+}
 void reverse(NODE PH)
 {
-	NODE TP,PN,SN;
-	TP=PH->link;
-	SN=PH;
-	while(TP!=PH)
+	NODE temp = PH;
+	NODE prev = NULL;
+	NODE curr = NULL;
+	while(temp != NULL)
 	{
-	PN=TP;
-	TP=TP->link;
-	PN->link=SN;
-	SN=PN;
+	curr = temp->RL;
+	temp->RL = prev;
+	temp->LL = curr;
+	prev = temp;
+	temp = curr;
 	}
-	PH->link=PN;
-} 
+	PH = prev;
+}
 NODE Copy(NODE PH)
 {
-	NODE NN,TP,Cpy;
- 	NN=createnode();
-	NN->info=PH->info;
-	Cpy=NN;
-	TP=PH->link;
-	while(TP!=PH)
+	NODE NN,TP,cpy,temp;
+	NN = CreateNode();
+	NN->info = PH->info;
+	cpy =NN;
+	TP = PH->RL;
+	
+	while(TP !=PH)
 	{
-	NN->link=createnode();
-	NN=NN->link;
-	NN->info=TP->info;
-	TP=TP->link;
+	NN->RL = CreateNode();
+	temp = NN;
+	NN = NN->RL;
+	
+	NN->info = TP->info;
+	NN->LL = temp;
+	TP = TP->RL;
 	}
-	NN->link=Cpy;
-	return Cpy;
+	NN->RL = cpy;
+	cpy->LL = NN;
+	return cpy;
 }
+
+	
+	
+
