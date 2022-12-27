@@ -36,7 +36,7 @@ void push (STK *pS)
 {
 int item;
 if(IsFull(pS))
-{printf("Empty ");
+{printf("Full ");
  return;
 }
 printf("Enter the item \n");
