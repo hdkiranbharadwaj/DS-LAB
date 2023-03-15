@@ -209,6 +209,8 @@ int search(int *p)
 void sort (int *p)
 {
      int i,j,temp;
+     for(i=0;i<N-1;i++)
+     {
      for(j=0;j<N-i-1;j++)
      {
      if(*(p+j)>*(p+j+1))
@@ -216,6 +218,7 @@ void sort (int *p)
       temp=*(p+j);
       *(p+j)=*(p+j+1);
       *(p+j+1)=temp;
+     }
      }
      }
 }
