@@ -21,7 +21,7 @@ NODE insertbyorder(NODE);
 NODE sort(NODE);
 NODE search(NODE);
 NODE reverse(NODE);
-NODE cop(NODE);
+NODE cpyu(NODE);
 void main()
 { 
   NODE First=NULL;
@@ -50,7 +50,7 @@ for(;;)
     case 9:First=deletebykey(First);Display(First);break;
     case 10:First=deletebypos(First);Display(First);break;
     case 11:First=sort(First);Display(First);break;
-    case 12: copy=cop(First);Display(copy);break;
+    case 12: copy=cpyu(First);Display(copy);break;
     case 13:rev=reverse(First);Display(rev);break;
     default:exit(0);
   }
